@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register Device</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+body { font-family: Arial, sans-serif; background:#00562a; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;}
+.card { background:#ffffff; padding:2rem; border-radius:12px; box-shadow:0 5px 20px rgba(0,0,0,0.1); width:300px; text-align:center; }
+input, button { width:100%; padding:0.6rem; margin:0.5rem 0; border-radius:6px; border:1px solid #ccc; }
+button { background:#1b9040; color:#fff; border:none; cursor:pointer; }
+button:hover { background:#088e5b; }
+.footer { position:fixed; left:1rem; bottom:1rem; font-size:0.7rem; color:#555; }
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2>Register Your Device</h2>
+<form method="POST">
+<input type="hidden" name="token" value="{{ token }}">
+<input type="text" name="name" placeholder="Your Name" required>
+<input type="text" name="student_number" placeholder="Student Number" required>
+<button type="submit">Submit</button>
+</form>
+</div>
+
+<div class="footer">
+John Gilbert Sevilla, Arjei Lacayanga, John Lei Madrona, Eugene Ricafort
+</div>
+
+</body>
+</html>

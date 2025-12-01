@@ -1,0 +1,8 @@
+flask
+requests
+qrcode
+pillow
+pandas
+openpyxl
+pyinstaller
+pyzbar

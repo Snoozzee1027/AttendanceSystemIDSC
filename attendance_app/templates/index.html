@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance QR</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+body { font-family: Arial, sans-serif; background: #00562a; display: flex; justify-content:center; align-items:center; height:100vh; margin:0;}
+.card { background:#11aa96; padding:2rem; border-radius:12px; box-shadow:0 5px 20px rgba(0,0,0,0.1); max-width:400px; text-align:center; }
+img { width:300px; margin:1rem 0; }
+.timer { font-weight:bold; margin-bottom:1rem; }
+.footer { position:fixed; left:1rem; bottom:1rem; font-size:0.7rem; color:#555; }
+button { padding:0.5rem 1rem; border:none; background:#0eb329; color:#fff; border-radius:6px; cursor:pointer; }
+button:hover { background:#1366d6; }
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2>Scan QR for Attendance</h2>
+<p>Scan with your phone or open the URL below:</p>
+<img id="qr-img" src="{{ qr_base64 }}" alt="QR Code">
+<div class="qr-value"><a href="{{ qr_value }}" target="_blank">{{ qr_value }}</a></div>
+<div class="timer" id="timer">Loading expiry...</div>
+<button id="refresh-btn">Refresh QR</button>
+</div>
+
+<div class="footer">
+John Gilbert Sevilla, Arjei Lacayanga, John Lei Madrona, Eugene Ricafort
+</div>
+
+<script>
+const refreshSeconds = Number("{{ refresh_seconds }}");const expiry = "{{ expiry }}";
+
+function updateTimer() {
+    if (!expiry) { document.getElementById('timer').innerText='No QR yet'; return; }
+    const exp = new Date(expiry);
+    const now = new Date();
+    let diff = Math.floor((exp - now)/1000);
+    if(diff<=0){ document.getElementById('timer').innerText='QR expired'; return; }
+    const hrs = Math.floor(diff/3600); diff%=3600;
+    const mins = Math.floor(diff/60); const secs = diff%60;
+    document.getElementById('timer').innerText=`Expires in ${hrs}h ${mins}m ${secs}s`;
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+
+document.getElementById('refresh-btn').addEventListener('click', async ()=>{
+    const res = await fetch('/qr');
+    const data = await res.json();
+    document.getElementById('qr-img').src = data.qr_base64;
+});
+</script>
+</body>
+</html>

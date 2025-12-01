@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+body { font-family: Arial, sans-serif; background:#f5f6fa; margin:0; }
+header { background:#068f5d; color:#fff; padding:1rem; text-align:center; }
+
+.container { padding:2rem; }
+
+table { width:100%; border-collapse:collapse; margin-bottom:2rem; }
+th, td { border:1px solid #ccc; padding:0.5rem; text-align:left; }
+th { background:#068f5d; color:#fff; }
+
+button { padding:0.4rem 0.7rem; border:none; border-radius:4px; cursor:pointer; }
+
+.logout { background:#eb5757; color:#fff; }
+.viewqr { background:#27ae60; color:#fff; }
+.clear { background:#c0392b; color:#fff; }
+.export { background:#2980b9; color:#fff; }
+.credentials { background:#92fa00; color:#000; }
+.remove { background:#e74c3c; color:#fff; }
+
+.footer { position:fixed; left:1rem; bottom:1rem; font-size:0.7rem; color:#555; }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Admin Dashboard</h1>
+    <a href="{{ url_for('admin_logout') }}"><button class="logout">Logout</button></a>
+    <a href="{{ url_for('index') }}" target="_blank"><button class="viewqr">View Attendance QR</button></a>
+</header>
+
+<div class="container">
+
+<h2>Quick Actions</h2>
+
+<!-- EXPORT -->
+<form action="{{ url_for('admin_export') }}" method="get" style="margin-bottom:1rem;">
+    <label>Start: <input type="date" name="start"></label>
+    <label>End: <input type="date" name="end"></label>
+    <button type="submit" class="export">Export to Excel</button>
+</form>
+
+<!-- CLEAR ATTENDANCE -->
+<form action="{{ url_for('admin_clear') }}" method="get" 
+      onsubmit="return confirm('Are you sure you want to clear ALL attendance?');">
+    <button type="submit" class="clear">Clear Attendance</button>
+</form>
+
+<!-- CHANGE CREDENTIALS -->
+<a href="{{ url_for('change_credentials') }}">
+    <button class="credentials" style="margin-top:1rem;">Change Admin Credentials</button>
+</a>
+
+<hr><br>
+
+<h2>Attendance Records</h2>
+<table>
+<tr><th>Name</th><th>Student #</th><th>Device ID</th><th>Date</th><th>Time</th></tr>
+{% for row in records %}
+<tr>
+    <td>{{ row[1] }}</td>
+    <td>{{ row[2] }}</td>
+    <td>{{ row[3] }}</td>
+    <td>{{ row[4] }}</td>
+    <td>{{ row[5] }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h2>Registered Devices</h2>
+<table>
+<tr><th>Device ID</th><th>Name</th><th>Student #</th><th>Action</th></tr>
+
+{% for dev in devices %}
+<tr>
+    <td>{{ dev[1] }}</td> <!-- device_id -->
+    <td>{{ dev[2] }}</td> <!-- name -->
+    <td>{{ dev[3] }}</td> <!-- student_number -->
+
+    <td>
+        <form action="{{ url_for('admin_remove_device', device_id=dev[1]) }}"
+              method="post"
+              onsubmit="return confirm('Remove this device? This will also delete its attendance.');">
+            <button class="remove" type="submit">Remove</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+</div>
+
+<div class="footer">
+John Gilbert Sevilla, Arjei Lacayanga, John Lei Madrona, Eugene Ricafort
+</div>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.zip
+*.mp4
+*.h5
+*.tflite
+*.sqlite
+*.db
